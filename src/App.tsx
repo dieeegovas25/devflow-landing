@@ -1,122 +1,86 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState, type FormEvent } from 'react';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+interface Feature {
+  title: string;
+  description: string;
 }
 
-export default App
+const FEATURES: Feature[] = [
+  {
+    title: 'Deploy Instantáneo',
+    description: 'Conecta tu repositorio y publica cada Pull Request en entornos aislados en segundos.',
+  },
+  {
+    title: 'CI/CD Sin Fricción',
+    description: 'Ejecuta pruebas unitarias y linters automáticamente antes de permitir un merge a main.',
+  },
+  {
+    title: 'Métricas en Tiempo Real',
+    description: 'Monitorea el rendimiento de tus Core Web Vitals y tiempos de respuesta sin configurar agentes.',
+  },
+];
+
+export function App() {
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setSubmitted(true);
+    setEmail('');
+  };
+
+  return (
+    <div>
+      <header className="navbar">
+        <span className="logo">DevFlow.io</span>
+        <button className="btn" onClick={() => document.getElementById('waitlist')?.focus()}>
+          Acceso Anticipado
+        </button>
+      </header>
+
+      <main>
+        <section className="hero">
+          <h1>Despliega código frontend a la velocidad de tus ideas</h1>
+          <p>
+            Automatiza tus pipelines, previsualiza ramas al instante y mantén tu rama principal siempre estable.
+          </p>
+
+          <form className="waitlist-box" onSubmit={handleSubmit}>
+            <input
+              id="waitlist"
+              type="email"
+              placeholder="tu@correo.com"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (submitted) setSubmitted(false);
+              }}
+              required
+            />
+            <button type="submit" className="btn">
+              Unirme a la lista
+            </button>
+          </form>
+
+          {submitted && (
+            <p className="feedback">¡Registro exitoso! Te enviaremos tu invitación pronto.</p>
+          )}
+        </section>
+
+        <section className="features">
+          {FEATURES.map((feat) => (
+            <article key={feat.title} className="card">
+              <h3>{feat.title}</h3>
+              <p>{feat.description}</p>
+            </article>
+          ))}
+        </section>
+      </main>
+    </div>
+  );
+}
+
+export default App;
